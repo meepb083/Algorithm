@@ -1,0 +1,203 @@
+import math
+
+history = []
+
+# =========================================
+# ฟังก์ชันคำนวณ
+# =========================================
+
+def add(numbers):
+    return sum(numbers)
+
+def subtract(numbers):
+    result = numbers[0]
+    for n in numbers[1:]:
+        result -= n
+    return result
+
+def multiply(numbers):
+    result = numbers[0]
+    for n in numbers[1:]:
+        result *= n
+    return result
+
+def divide(numbers):
+    result = numbers[0]
+    for n in numbers[1:]:
+        if n == 0:
+            raise ValueError("ไม่สามารถหารด้วยศูนย์ได้")
+        result /= n
+    return result
+
+def power(base, exponent):
+    return base ** exponent
+
+def percentage(base, percent):
+    return (base * percent) / 100
+
+def calculate_expression(expr):
+    expr = expr.replace("^", "**")
+    return eval(expr)
+
+# =========================================
+# แสดงผลลัพธ์
+# =========================================
+
+def display_result(title, equation, result):
+
+    print("\n" + "-"*50)
+
+    if title.strip():
+        print("หัวข้อ :", title)
+
+    print("สูตร   :", equation)
+    print("ผลลัพธ์ :", result)
+
+    print("-"*50)
+
+    history.append({
+        "title": title,
+        "equation": equation,
+        "result": result
+    })
+
+
+def show_history():
+
+    print("\n" + "-"*20 + " ประวัติการคำนวณ " + "-"*20)
+
+    if not history:
+        print("ยังไม่มีประวัติ")
+
+    else:
+        for i, h in enumerate(history,1):
+            name = h["title"] if h["title"] else "ไม่มีหัวข้อ"
+            print(f"{i}. [{name}]  {h['equation']} = {h['result']}")
+
+    print("-"*55)
+
+
+def clear_history():
+    history.clear()
+    print("ล้างประวัติเรียบร้อยแล้ว")
+
+
+# =========================================
+# รับตัวเลขหลายตัว
+# =========================================
+
+def input_numbers():
+
+    count = int(input("ต้องการกี่ตัวเลข : "))
+    numbers = []
+
+    for i in range(count):
+        num = float(input(f"ตัวเลขที่ {i+1} : "))
+        numbers.append(num)
+
+    return numbers
+
+
+# =========================================
+# เมนู
+# =========================================
+
+def show_menu():
+
+    print("""
+-----------------------------------------------------------
+                เครื่องคิดเลขพื้นฐาน(สร้างหัวข้อได้)
+-----------------------------------------------------------
+
+1  บวก
+2  ลบ
+3  คูณ
+4  หาร
+5  ยกกำลัง
+6  เปอร์เซ็นต์
+7  คำนวณสูตรทั้งบรรทัด
+8  ดูประวัติ
+9  ล้างประวัติ
+0  ออกจากโปรแกรม
+          
+--------------------------------------------------
+""")
+
+
+# =========================================
+# โปรแกรมหลัก
+# =========================================
+
+def main():
+
+    while True:
+
+        show_menu()
+
+        choice = input("เลือกเมนู : ")
+
+        try:
+
+            if choice == "0":
+                print("ปิดโปรแกรม")
+                break
+
+            elif choice == "1":
+                nums = input_numbers()
+                result = add(nums)
+                eq = " + ".join(map(str, nums))
+
+            elif choice == "2":
+                nums = input_numbers()
+                result = subtract(nums)
+                eq = " - ".join(map(str, nums))
+
+            elif choice == "3":
+                nums = input_numbers()
+                result = multiply(nums)
+                eq = " * ".join(map(str, nums))
+
+            elif choice == "4":
+                nums = input_numbers()
+                result = divide(nums)
+                eq = " / ".join(map(str, nums))
+
+            elif choice == "5":
+                a = float(input("ฐาน : "))
+                b = float(input("กำลัง : "))
+                result = power(a, b)
+                eq = f"{a}^{b}"
+
+            elif choice == "6":
+                base = float(input("จำนวนตั้งต้น : "))
+                per = float(input("เปอร์เซ็นต์ : "))
+                result = percentage(base, per)
+                eq = f"{per}% ของ {base}"
+
+            elif choice == "7":
+                expr = input("ป้อนสูตร เช่น (5+8)*3^2 : ")
+                result = calculate_expression(expr)
+                eq = expr
+
+            elif choice == "8":
+                show_history()
+                continue
+
+            elif choice == "9":
+                clear_history()
+                continue
+
+            else:
+                print("เมนูไม่ถูกต้อง")
+                continue
+
+            title = input("ตั้งชื่อหัวข้อ (กด Enter เพื่อข้าม) : ")
+
+            display_result(title, eq, result)
+
+        except Exception as e:
+            print("Error:", e)
+
+
+if __name__ == "__main__":
+    main()
